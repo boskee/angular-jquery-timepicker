@@ -95,7 +95,11 @@ m.directive('uiTimepicker', ['uiTimepickerConfig', '$parse', '$window', function
 
             if (element.is('input')) {
                 ngModel.$parsers.unshift(function(viewValue) {
+                    var oldDate = ngModel.$modelValue ? ngModel.$modelValue : scope.baseDate;
                     var date = element.timepicker('getTime', asDate());
+                    if (date === null) {
+                        return oldDate;
+                    }
                     return date ? asMomentOrDate(date) : date;
                 });
                 ngModel.$validators.time = function(modelValue) {
